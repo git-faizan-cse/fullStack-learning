@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmojiGuessGame</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id='gameContainer'>
+        <h1>Emoji Guess Game</h1>
+
+        <div id='emojiDisplay'>😀</div>
+        <input id="emojiInput" type="text" name="emoji" placeholder="Enter Emoji Name">
+        <button id="submitBtn">Submit</button>
+        <div id="result"></div>
+        <div id="score">Score: 0</div>
+        <button id="nextBtn" style="display:none;">Next Emoji</button>
+        <div id="finalScore" style="display:none;"></div>
+        <button id="restartBtn" style="display:none;">Restart Game</button>
+        
+        <div id="leaderboard" style="display:none;">
+            <h2>Leaderboard</h2>
+            <ol id="leaderboardList"></ol>
+
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which of the following is NOT a JavaScript data type?",
+      "options": ["String", "Number", "Boolean", "Character"],
+      "correctAnswer": "Character",
+      "explanation": "JavaScript has six primitive data types: String, Number, Boolean, Undefined, Null, and Symbol, plus the Object type. Character is not a built-in data type in JavaScript - individual characters are represented using String type."
+    },
+    {
+      "id": 2,
+      "question": "What is the result of `typeof null` in JavaScript?",
+      "options": ["null", "undefined", "object", "number"],
+      "correctAnswer": "object",
+      "explanation": "In JavaScript, `typeof null` returns 'object'. This is a known historical bug in JavaScript that has persisted for backward compatibility. Despite null being a primitive value, typeof null returns 'object' due to its original implementation."
+    },
+    {
+      "id": 3,
+      "question": "Which method is used to add an element at the end of an array?",
+      "options": ["push()", "pop()", "shift()", "unshift()"],
+      "correctAnswer": "push()",
+      "explanation": "Array.push() adds one or more elements to the end of an array. pop() removes from the end, shift() removes from the beginning, and unshift() adds to the beginning of the array."
+    },
+    {
+      "id": 4,
+      "question": "What will `2 + '2'` evaluate to in JavaScript?",
+      "options": ["4", "22", "NaN", "undefined"],
+      "correctAnswer": "22",
+      "explanation": "When adding a number and a string with '+', JavaScript performs string concatenation instead of arithmetic addition. So 2 (number) is converted to '2' (string) and then concatenated with '2', resulting in '22'."
+    },
+    {
+      "id": 5,
+      "question": "Which keyword is used to declare a constant variable in JavaScript?",
+      "options": ["let", "const", "var", "constant"],
+      "correctAnswer": "const",
+      "explanation": "const is used to declare constants in JavaScript. Once declared, these variables cannot be reassigned. 'constant' is not a valid keyword, 'let' and 'var' are used for declaring regular variables."
+    },
+    {
+      "id": 6,
+      "question": "What is the value of an uninitialized variable in JavaScript?",
+      "options": ["null", "undefined", "0", "NaN"],
+      "correctAnswer": "undefined",
+      "explanation": "When a variable is declared but not initialized in JavaScript, it automatically gets the value 'undefined'. This is different from null, which must be explicitly assigned."
+    },
+    {
+      "id": 7,
+      "question": "Which operator checks for both value and type equality in JavaScript?",
+      "options": ["==", "===", "=", "!="],
+      "correctAnswer": "===",
+      "explanation": "The strict equality operator (===) checks both value and type, while == only checks value after type coercion. For example, '5' === 5 is false, but '5' == 5 is true."
+    },
+    {
+      "id": 8,
+      "question": "Which array method does NOT return a new array?",
+      "options": ["map()", "forEach()", "filter()", "reduce()"],
+      "correctAnswer": "forEach()",
+      "explanation": "forEach() is used for iterating over array elements and executing a function for each element, but it doesn't return a new array. map(), filter(), and reduce() all return new values."
+    },
+    {
+      "id": 9,
+      "question": "Which statement is used for handling runtime errors in JavaScript?",
+      "options": ["if...else", "try...catch", "switch...case", "for...in"],
+      "correctAnswer": "try...catch",
+      "explanation": "The try...catch statement is used to handle runtime errors (exceptions) in JavaScript. The code that might throw an error goes in the try block, and the error handling goes in the catch block."
+    },
+    {
+      "id": 10,
+      "question": "Which array method transforms each element and returns a new array?",
+      "options": ["filter()", "map()", "reduce()", "indexOf()"],
+      "correctAnswer": "map()",
+      "explanation": "map() creates a new array with the results of calling a function for every array element, transforming each element according to the provided function."
+    },
+     {
+      "id": 11,
+      "question": "Which symbol is used for comments in JavaScript?",
+      "options": ["//", "/* */", "#", "<!-- -->"],
+      "correctAnswer": "//",
+      "explanation": "Single-line comments in JavaScript use //, while multi-line comments use /* */. # and <!-- --> are not valid in JavaScript."
+    },
+    {
+      "id": 12,
+      "question": "What does NaN stand for in JavaScript?",
+      "options": ["Not a Null", "Not a Number", "New array Number", "Negative and Null"],
+      "correctAnswer": "Not a Number",
+      "explanation": "NaN stands for Not a Number, and it represents a value that is not a valid number, often resulting from invalid arithmetic operations."
+    },
+    {
+      "id": 13,
+      "question": "Which function is used to parse a string into an integer?",
+      "options": ["parseFloat()", "parseInt()", "Number()", "toInteger()"],
+      "correctAnswer": "parseInt()",
+      "explanation": "parseInt() parses a string and returns an integer. parseFloat() parses a string into a floating-point number, while Number() converts to a number in general."
+    },
+    {
+      "id": 14,
+      "question": "Which keyword is used to define a function in JavaScript?",
+      "options": ["func", "function", "def", "fn"],
+      "correctAnswer": "function",
+      "explanation": "The function keyword is used to define functions in JavaScript. func, def, and fn are not valid JavaScript keywords."
+    },
+    {
+      "id": 15,
+      "question": "Which built-in method removes the last element from an array?",
+      "options": ["shift()", "pop()", "push()", "splice()"],
+      "correctAnswer": "pop()",
+      "explanation": "The pop() method removes the last element from an array. shift() removes the first element, push() adds to the end, and splice() modifies the array in place."
+    },
+    {
+      "id": 16,
+      "question": "Which operator is used to assign a value to a variable?",
+      "options": ["=", "==", "===", "=>"],
+      "correctAnswer": "=",
+      "explanation": "The = operator assigns a value to a variable. == and === are comparison operators, while => is used in arrow functions."
+    },
+    {
+      "id": 17,
+      "question": "What does the break statement do in JavaScript loops?",
+      "options": ["Skips current iteration", "Stops the loop entirely", "Pauses loop temporarily", "Restarts loop"],
+      "correctAnswer": "Stops the loop entirely",
+      "explanation": "The break statement immediately exits the loop. To skip the current iteration, use the continue statement."
+    },
+    {
+      "id": 18,
+      "question": "What is the default value of an object property that has not been assigned?",
+      "options": ["null", "0", "undefined", "empty string"],
+      "correctAnswer": "undefined",
+      "explanation": "If an object property is accessed but not assigned a value, it returns undefined."
+    },
+    {
+      "id": 19,
+      "question": "Which operator is used to combine conditions in JavaScript?",
+      "options": ["&&", "||", "!", "Both && and ||"],
+      "correctAnswer": "Both && and ||",
+      "explanation": "&& is used for logical AND, || is used for logical OR, and ! is used for negation."
+    },
+    {
+      "id": 20,
+      "question": "Which method converts a JSON string into a JavaScript object?",
+      "options": ["JSON.parse()", "JSON.stringify()", "Object.parse()", "toObject()"],
+      "correctAnswer": "JSON.parse()",
+      "explanation": "JSON.parse() is used to parse a JSON string into a JavaScript object. JSON.stringify() does the reverse."
+    },
+    {
+      "id": 21,
+      "question": "Which method is used to join elements of an array into a string?",
+      "options": ["concat()", "join()", "push()", "slice()"],
+      "correctAnswer": "join()",
+      "explanation": "join() concatenates all elements of an array into a single string. concat() merges arrays, push() adds elements, and slice() extracts a portion."
+    },
+    {
+      "id": 22,
+      "question": "What does the continue statement do in JavaScript loops?",
+      "options": ["Ends the loop", "Skips current iteration", "Restarts loop", "Throws an error"],
+      "correctAnswer": "Skips current iteration",
+      "explanation": "The continue statement skips the current iteration and moves to the next iteration of the loop."
+    },
+    {
+      "id": 23,
+      "question": "What is the output of `Boolean('false')`?",
+      "options": ["true", "false", "undefined", "NaN"],
+      "correctAnswer": "true",
+      "explanation": "Any non-empty string is truthy in JavaScript. Therefore, Boolean('false') returns true, even though the string says 'false'."
+    },
+    {
+      "id": 24,
+      "question": "Which function is used to schedule code execution after a delay?",
+      "options": ["setInterval()", "setTimeout()", "sleep()", "wait()"],
+      "correctAnswer": "setTimeout()",
+      "explanation": "setTimeout() executes code after a specified delay. setInterval() repeatedly executes code at intervals. JavaScript does not have sleep() or wait()."
+    },
+    {
+      "id": 25,
+      "question": "Which function repeatedly executes code at specified intervals?",
+      "options": ["setInterval()", "setTimeout()", "repeat()", "loop()"],
+      "correctAnswer": "setInterval()",
+      "explanation": "setInterval() calls a function repeatedly at given time intervals. setTimeout() executes only once."
+    },
+    {
+      "id": 26,
+      "question": "What will `typeof NaN` return?",
+      "options": ["number", "NaN", "undefined", "object"],
+      "correctAnswer": "number",
+      "explanation": "Although NaN means 'Not a Number', its type is 'number' in JavaScript. This is part of JavaScript's type system."
+    },
+    {
+      "id": 27,
+      "question": "Which method is used to remove the first element from an array?",
+      "options": ["shift()", "pop()", "unshift()", "slice()"],
+      "correctAnswer": "shift()",
+      "explanation": "The shift() method removes the first element of an array. pop() removes the last, unshift() adds to the start, and slice() extracts without modifying."
+    },
+    {
+      "id": 28,
+      "question": "What is the correct way to declare an array in JavaScript?",
+      "options": ["var arr = [];", "var arr = {};", "var arr = ();", "var arr = <>;"],
+      "correctAnswer": "var arr = [];",
+      "explanation": "Arrays in JavaScript are declared using square brackets []. {} creates an object, () is not valid, and <> is not used in JS."
+    },
+    {
+      "id": 29,
+      "question": "Which method is used to combine two arrays?",
+      "options": ["join()", "concat()", "merge()", "combine()"],
+      "correctAnswer": "concat()",
+      "explanation": "The concat() method merges two or more arrays. join() creates a string, and merge()/combine() are not standard JS methods."
+    },
+    {
+      "id": 30,
+      "question": "What is the scope of a variable declared with var inside a function?",
+      "options": ["Block scope", "Function scope", "Global scope", "Module scope"],
+      "correctAnswer": "Function scope",
+      "explanation": "Variables declared with var inside a function are function-scoped. let and const provide block scope."
+    },
+    {
+      "id": 31,
+      "question": "Which method returns the length of a string?",
+      "options": ["size()", "length", "getLength()", "count()"],
+      "correctAnswer": "length",
+      "explanation": "Strings in JavaScript have a built-in property called length that returns the number of characters in the string."
+    },
+    {
+      "id": 32,
+      "question": "Which loop is guaranteed to run at least once?",
+      "options": ["for loop", "while loop", "do...while loop", "for...in loop"],
+      "correctAnswer": "do...while loop",
+      "explanation": "The do...while loop executes the block first, then checks the condition, so it always runs at least once."
+    },
+    {
+      "id": 33,
+      "question": "What does the `isNaN()` function do?",
+      "options": ["Checks if a value is null", "Checks if a value is NaN", "Checks if a value is undefined", "Checks if a value is number"],
+      "correctAnswer": "Checks if a value is NaN",
+      "explanation": "The isNaN() function determines whether a value is NaN (Not a Number)."
+    },
+    {
+      "id": 34,
+      "question": "Which operator is used to spread elements of an array?",
+      "options": ["...", "++", "**", "//"],
+      "correctAnswer": "...",
+      "explanation": "The spread operator (...) expands an array or object into individual elements."
+    },
+    {
+      "id": 35,
+      "question": "Which built-in object is used to work with dates and times in JavaScript?",
+      "options": ["Time", "Clock", "Date", "Calendar"],
+      "correctAnswer": "Date",
+      "explanation": "JavaScript provides the Date object to handle dates and times."
+    },
+    {
+      "id": 36,
+      "question": "What will `'5' - 2` evaluate to in JavaScript?",
+      "options": ["3", "52", "NaN", "undefined"],
+      "correctAnswer": "3",
+      "explanation": "The - operator triggers numeric conversion, so '5' is converted to number 5, and 5 - 2 = 3."
+    },
+    {
+      "id": 37,
+      "question": "Which symbol is used for template literals?",
+      "options": ["'", "\"", "`", "~"],
+      "correctAnswer": "`",
+      "explanation": "Template literals in JavaScript are enclosed with backticks (`) and allow interpolation using ${}."
+    },
+    {
+      "id": 38,
+      "question": "Which of the following is NOT a falsy value in JavaScript?",
+      "options": ["0", "false", "''", "'0'"],
+      "correctAnswer": "'0'",
+      "explanation": "The string '0' is a non-empty string, hence it is truthy. Falsy values include 0, false, '', null, undefined, and NaN."
+    },
+    {
+      "id": 39,
+      "question": "Which keyword is used to import modules in JavaScript ES6?",
+      "options": ["require", "import", "include", "using"],
+      "correctAnswer": "import",
+      "explanation": "ES6 introduced the import keyword for bringing in modules. require is used in CommonJS."
+    },
+    {
+      "id": 40,
+      "question": "Which array method returns the first index of a given element?",
+      "options": ["find()", "indexOf()", "search()", "position()"],
+      "correctAnswer": "indexOf()",
+      "explanation": "indexOf() returns the first index at which a given element can be found in an array."
+    },
+    {
+      "id": 41,
+      "question": "Which array method tests whether at least one element passes a condition?",
+      "options": ["every()", "some()", "filter()", "map()"],
+      "correctAnswer": "some()",
+      "explanation": "some() tests whether at least one element satisfies the provided function. every() checks all elements."
+    },
+    {
+      "id": 42,
+      "question": "Which keyword is used to create a class in JavaScript?",
+      "options": ["function", "object", "class", "constructor"],
+      "correctAnswer": "class",
+      "explanation": "ES6 introduced the class keyword for creating classes in JavaScript."
+    },
+    {
+      "id": 43,
+      "question": "Which operator is used for exponentiation in JavaScript?",
+      "options": ["^", "**", "exp()", "pow()"],
+      "correctAnswer": "**",
+      "explanation": "The ** operator performs exponentiation. For example, 2 ** 3 = 8."
+    },
+    {
+      "id": 44,
+      "question": "What does the `this` keyword refer to inside an object method?",
+      "options": ["Global object", "Current object", "Window", "Prototype"],
+      "correctAnswer": "Current object",
+      "explanation": "Inside an object method, this refers to the object that owns the method."
+    },
+    {
+      "id": 45,
+      "question": "Which statement is true about arrow functions?",
+      "options": ["They have their own this", "They inherit this from parent scope", "They cannot return values", "They must have curly braces"],
+      "correctAnswer": "They inherit this from parent scope",
+      "explanation": "Arrow functions do not have their own this; they lexically inherit it from the surrounding scope."
+    },
+    {
+      "id": 46,
+      "question": "Which function converts a number to a string in JavaScript?",
+      "options": ["toNumber()", "String()", "parseInt()", "numToStr()"],
+      "correctAnswer": "String()",
+      "explanation": "The String() function converts numbers, booleans, and other values to strings."
+    },
+    {
+      "id": 47,
+      "question": "What will `typeof []` return?",
+      "options": ["array", "object", "list", "undefined"],
+      "correctAnswer": "object",
+      "explanation": "Arrays in JavaScript are special objects, so typeof [] returns 'object'."
+    },
+    {
+      "id": 48,
+      "question": "Which built-in object handles mathematical constants and functions?",
+      "options": ["Math", "Number", "Calc", "Algebra"],
+      "correctAnswer": "Math",
+      "explanation": "The Math object provides mathematical constants (like PI) and functions (like sqrt, round, etc.)."
+    },
+    {
+      "id": 49,
+      "question": "What is the output of `'2' * '3'`?",
+      "options": ["6", "23", "NaN", "undefined"],
+      "correctAnswer": "6",
+      "explanation": "The * operator converts both operands to numbers, so '2' * '3' = 6."
+    },
+    {
+      "id": 50,
+      "question": "Which keyword is used to exit from a function and return a value?",
+      "options": ["stop", "end", "return", "break"],
+      "correctAnswer": "return",
+      "explanation": "The return keyword ends function execution and returns a specified value."
+    }
+  ]
+}

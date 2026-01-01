@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Score Keeper</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="root" style="text-align: center"></div>
+    <script type="text/babel">
+      const ScoreButtons = ({ addScore, addWicket, allOut }) => {
+        return (
+          <div>
+            <button
+              className="score-btn"
+              onClick={() => addScore(5)}
+              disabled={allOut}
+            >
+              5
+            </button>
+            <button
+              className="score-btn"
+              onClick={() => addScore(3)}
+              disabled={allOut}
+            >
+              3
+            </button>
+            <button
+              className="score-btn"
+              onClick={() => addScore(1)}
+              disabled={allOut}
+            >
+              1
+            </button>
+
+            <button
+              className="score-btn"
+              onClick={() => addScore(0)}
+              disabled={allOut}
+            >
+              o
+            </button>
+            <button
+              className="score-btn"
+              onClick={() => addScore(2)}
+              disabled={allOut}
+            >
+              2
+            </button>
+            <button
+              className="score-btn"
+              onClick={() => addScore(4)}
+              disabled={allOut}
+            >
+              4
+            </button>
+
+            <button
+              className="score-btn"
+              onClick={() => addScore(6)}
+              disabled={allOut}
+            >
+              6
+            </button>
+            <button
+              className="wicket-btn"
+              onClick={addWicket}
+              disabled={allOut}
+            >
+              wicket
+            </button>
+          </div>
+        );
+      };
+
+      const App = () => {
+        const [score, setScore] = React.useState(0);
+        const [wicket, setWicket] = React.useState(0);
+        const [allOut, setAllOut] = React.useState(false);
+        const [ballWiseRes, setBallWiseRes] = React.useState([]);
+        const [showDetails, setShowDetails] = React.useState(false);
+        // const [ballCount, setBallCount] = React.useState(0);
+        const [showResetConfirm, setShowResetConfirm] = React.useState(false);
+        // const [noBallRuns, setNoBallRuns] = React.useState(0);
+        const [legalBalls, setLegalBalls] = React.useState([]);
+        // const [wideBallRuns, setWideBallRuns] = React.useState(0);
+        const [extraType, setExtraType] = React.useState("NB");
+        const [extraRuns, setExtraRuns] = React.useState(0);
+        const [extraWicket, setExtraWicket] = React.useState(false);
+
+        React.useEffect(() => {
+          try {
+            const saved = JSON.parse(localStorage.getItem("scoreData"));
+            if (saved) {
+              setScore(saved.score || 0);
+              setWicket(saved.wicket || 0);
+              setBallWiseRes(saved.ballWiseRes || []);
+
+              // ✅ Recalculate legalBalls from ballWiseRes
+              const newLegalBalls = (saved.ballWiseRes || []).filter((res) => {
+                const isNoBall =
+                  typeof res === "string" && res.startsWith("NB");
+                const isWide = typeof res === "string" && res.startsWith("WD");
+                return !isNoBall && !isWide;
+              });
+
+              setLegalBalls(newLegalBalls);
+
+              if (saved.wicket >= 10) {
+                setAllOut(true);
+              }
+            }
+          } catch (err) {
+            console.error("Failed to load score from localStorage", err);
+          }
+        }, []);
+
+        React.useEffect(() => {
+          localStorage.setItem(
+            "scoreData",
+            JSON.stringify({ score, wicket, ballWiseRes })
+          );
+        }, [score, wicket, ballWiseRes]);
+
+        function addScore(x) {
+          if (allOut) return;
+          // let result = confirm(`${x} is clicked. \n Are you sure you want to add this to Score.`);
+          let result = true;
+          if (result) {
+            setBallWiseRes((prev) => [...prev, x]);
+            setLegalBalls((prev) => [...prev, x]); // add to legal deliveries
+            setScore((prevScore) => prevScore + x);
+
+            // setBallCount((prev) => prev + 1);
+          }
+        }
+
+        function addWicket() {
+          if (allOut) return;
+
+          // let result = confirm('Wicket is clicked. \n Are you sure this is wicket.');
+          let result = true;
+          if (result) {
+            setBallWiseRes((prev) => [...prev, "W"]);
+
+            setWicket((prevWicket) => {
+              const newWicket = prevWicket + 1;
+              if (newWicket >= 10) {
+                setAllOut(true);
+              }
+
+              return newWicket;
+            });
+            // setBallCount((prev) => prev + 1);
+            setLegalBalls((prev) => [...prev, "W"]);
+          }
+          console.log(ballWiseRes);
+        }
+
+        function undoLastBall() {
+          if (ballWiseRes.length === 0) return;
+
+          const last = ballWiseRes[ballWiseRes.length - 1];
+          setBallWiseRes((prev) => prev.slice(0, -1));
+
+          let scoreToRemove = 0;
+          let wicketToRemove = 0;
+          let isLegal = true;
+
+          if (last === "W") {
+            wicketToRemove = 1;
+          } else if (typeof last === "string" && last.includes("+")) {
+            const parts = last.split("+");
+            const type = parts[0];
+            const runs = Number(parts[1]) || 0;
+            const hasW = parts.includes("W");
+
+            if (type === "NB" || type === "WD") {
+              scoreToRemove += runs + 1;
+              isLegal = false;
+            } else {
+              scoreToRemove += runs;
+            }
+
+            if (hasW) wicketToRemove = 1;
+          } else {
+            scoreToRemove = Number(last);
+          }
+
+          setScore((prev) => prev - scoreToRemove);
+          setWicket((prev) => Math.max(prev - wicketToRemove, 0));
+          if (wicket - wicketToRemove < 10) setAllOut(false);
+
+          // 🛠️ FIX: remove last legal ball if this was a legal delivery
+          if (isLegal) {
+            setLegalBalls((prev) => prev.slice(0, -1));
+          }
+        }
+
+        // function resetMatch() {
+        //   setScore(0);
+        //   setWicket(0);
+        //   setAllOut(false);
+        //   setBallWiseRes([]);
+        // }
+        // extra del it
+
+        function resetMatch() {
+          // Step 1: Show verify button
+          setShowResetConfirm(true);
+        }
+
+        function confirmReset() {
+          // Step 2: Actually reset
+          setScore(0);
+          setWicket(0);
+          setAllOut(false);
+          setBallWiseRes([]);
+          setLegalBalls([]);
+          setShowResetConfirm(false);
+          localStorage.removeItem("scoreData");
+        }
+
+        function addNoBall() {
+          if (allOut) return;
+          // Add 1 run for the no ball plus selected runs
+          let runs = Number(noBallRuns);
+
+          setBallWiseRes((prev) => [...prev, `NB+${runs}`]);
+          setScore((prevScore) => prevScore + runs + 1);
+          // No increment of ballCount because no ball is extra
+        }
+
+        function addWideBall() {
+          if (allOut) return;
+
+          let runs = Number(wideBallRuns);
+          setBallWiseRes((prev) => [...prev, `WD+${runs}`]);
+          setScore((prevScore) => prevScore + runs + 1); // 1 extra for wide
+        }
+        function addExtra() {
+          if (allOut) return;
+
+          let entry = `${extraType}+${extraRuns}`;
+          if (extraWicket) {
+            entry += "+W";
+          }
+
+          setBallWiseRes((prev) => [...prev, entry]);
+
+          // Update score
+          setScore(
+            (prevScore) =>
+              prevScore +
+              Number(extraRuns) +
+              (extraType === "NB" || extraType === "WD" ? 1 : 0)
+          );
+
+          // Update wicket
+          if (extraWicket) {
+            setWicket((prev) => {
+              const newWicket = prev + 1;
+              if (newWicket >= 10) {
+                setAllOut(true);
+              }
+              return newWicket;
+            });
+          }
+        }
+
+        return (
+          <>
+            {/* This is whole webPage Container */}
+            <div className="app-container">
+              {/* This is the Scoreboard heading */}
+              <h1>SCOREBOARD</h1>
+
+              {/* This show us the score */}
+              <h2>
+                SCORE: {score}/{wicket}{" "}
+              </h2>
+
+              <h3>
+                Overs: {Math.floor(legalBalls.length / 6)}.
+                {legalBalls.length % 6}
+              </h3>
+
+              {/* Shows AllOut when wicket are 10 */}
+              {allOut && <h2 style={{ color: "red" }}>All Out</h2>}
+
+              {/* This shows us the buttons which are stored in beginning of the code */}
+              <div className="button-group">
+                <ScoreButtons
+                  addScore={addScore}
+                  addWicket={addWicket}
+                  allOut={allOut}
+                />
+              </div>
+
+              {/* This is Undo Button for undo the last ball if some mistake happens */}
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <button onClick={undoLastBall} className="undo-btn">
+                  Undo Last Ball
+                </button>
+              </div>
+
+              {/* EXTRAS SECTION */}
+              <div className="extras-section" style={{ marginTop: "20px" }}>
+                <h3>Add Extras:</h3>
+                <label>
+                  Type:
+                  <select
+                    value={extraType}
+                    onChange={(e) => setExtraType(e.target.value)}
+                    disabled={allOut}
+                  >
+                    <option value="NB">No Ball</option>
+                    <option value="WD">Wide</option>
+                    <option value="B">Bye</option>
+                    <option value="LB">Leg Bye</option>
+                  </select>
+                </label>
+                <label style={{ marginLeft: "10px" }}>
+                  Runs:
+                  <input
+                    type="number"
+                    value={extraRuns}
+                    onChange={(e) => setExtraRuns(e.target.value)}
+                    min="0"
+                    max="6"
+                    disabled={allOut}
+                    style={{ width: "50px", marginLeft: "5px" }}
+                  />
+                </label>
+                <label style={{ marginLeft: "10px" }}>
+                  Wicket?
+                  <input
+                    type="checkbox"
+                    checked={extraWicket}
+                    onChange={(e) => setExtraWicket(e.target.checked)}
+                    disabled={allOut}
+                  />
+                </label>
+                <button
+                  onClick={addExtra}
+                  disabled={allOut}
+                  className="score-btn"
+                  style={{ marginLeft: "10px" }}
+                >
+                  Add Extra
+                </button>
+              </div>
+
+              <div
+                className="legend"
+                style={{ fontSize: "14px", marginBottom: "10px" }}
+              >
+                <strong>Legend:</strong> &nbsp;
+                <span style={{ color: "orange" }}>NB</span> (No Ball), &nbsp;
+                <span style={{ color: "blue" }}>WD</span> (Wide), &nbsp;
+                <span style={{ color: "purple" }}>B</span> (Bye), &nbsp;
+                <span style={{ color: "green" }}>LB</span> (Leg Bye), &nbsp;
+                <span style={{ color: "red" }}>W</span> (Wicket)
+              </div>
+
+              <h3>Current Over: / Last Six Deliveries</h3>
+              <div className="current-over">
+                {(() => {
+                  const deliveries = [];
+                  let legalCount = 0;
+                  let over = 0;
+                  let ball = 0;
+
+                  for (let i = 0; i < ballWiseRes.length; i++) {
+                    const res = ballWiseRes[i];
+                    const isNoBall =
+                      typeof res === "string" && res.startsWith("NB");
+                    const isWide =
+                      typeof res === "string" && res.startsWith("WD");
+                    const isBye =
+                      typeof res === "string" && res.startsWith("B");
+                    const isLegBye =
+                      typeof res === "string" && res.startsWith("LB");
+                    const hasWicket =
+                      typeof res === "string" && res.includes("+W");
+
+                    const isExtra = isNoBall || isWide || isBye || isLegBye;
+
+                    // Use these for display
+                    const displayOver = over;
+                    const displayBall = ball + 1;
+
+                    // Store current delivery with current over.ball
+                    deliveries.push({
+                      res,
+                      over: displayOver,
+                      ball: displayBall,
+                      isNoBall,
+                      isWide,
+                      isBye,
+                      isLegBye,
+                      isExtra,
+                      hasWicket,
+                    });
+
+                    // Increment ball only for legal deliveries, Byes, or Leg Byes
+                    if (!isNoBall && !isWide) {
+                      ball += 1;
+                      legalCount++;
+
+                      if (ball === 6) {
+                        over += 1;
+                        ball = 0;
+                      }
+                    }
+                  }
+
+                  // Build last 6 legal delivery window including extras
+                  const last6 = [];
+                  let legalSoFar = 0;
+
+                  for (let i = deliveries.length - 1; i >= 0; i--) {
+                    const d = deliveries[i];
+                    last6.unshift(d);
+
+                    if (!d.isNoBall && !d.isWide) {
+                      legalSoFar++;
+                    }
+
+                    if (legalSoFar === 6) break;
+                  }
+
+                  return last6.map((d, idx) => {
+                    const {
+                      res,
+                      over,
+                      ball,
+                      isNoBall,
+                      isWide,
+                      isBye,
+                      isLegBye,
+                      isExtra,
+                      hasWicket,
+                    } = d;
+
+                    const label = isNoBall
+                      ? "NB"
+                      : isWide
+                      ? "WD"
+                      : isBye
+                      ? "B"
+                      : isLegBye
+                      ? "LB"
+                      : "";
+
+                    const color = isNoBall
+                      ? "orange"
+                      : isWide
+                      ? "blue"
+                      : isBye
+                      ? "purple"
+                      : isLegBye
+                      ? "green"
+                      : "black";
+
+                    return (
+                      <div key={idx} style={{ margin: "5px" }}>
+                        {over}.{ball} :{" "}
+                        {isExtra ? (
+                          <>
+                            <span style={{ color, fontWeight: "bold" }}>
+                              {label}
+                            </span>{" "}
+                            - <span style={{ fontWeight: "bold" }}>{res}</span>
+                          </>
+                        ) : (
+                          <span
+                            style={
+                              res === "W" || hasWicket
+                                ? { color: "red", fontWeight: "bold" }
+                                : {}
+                            }
+                          >
+                            {res}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+
+              <button onClick={() => setShowDetails((prev) => !prev)}>
+                {showDetails ? "Hide Detailed Sheet" : "Show Detailed Sheet"}
+              </button>
+
+              {showDetails && (
+                <>
+                  <h3>Detailed Ball-by-Ball Sheet:</h3>
+                  <div className="detailed-sheet">
+                    {(() => {
+                      let tempScore = 0;
+                      let tempWicket = 0;
+                      let over = 0;
+                      let ball = 0;
+
+                      const output = [];
+
+                      const legalDelivery = (res) => {
+                        const isNoBall =
+                          typeof res === "string" && res.startsWith("NB");
+                        const isWide =
+                          typeof res === "string" && res.startsWith("WD");
+                        return !isNoBall && !isWide; // B, LB, W, numbers => legal
+                      };
+
+                      ballWiseRes.forEach((res, index) => {
+                        const isNoBall =
+                          typeof res === "string" && res.startsWith("NB");
+                        const isWide =
+                          typeof res === "string" && res.startsWith("WD");
+                        const isBye =
+                          typeof res === "string" && res.startsWith("B");
+                        const isLegBye =
+                          typeof res === "string" && res.startsWith("LB");
+                        const hasWicket =
+                          typeof res === "string" && res.includes("+W");
+
+                        const isExtra = isNoBall || isWide || isBye || isLegBye;
+                        const isLegal = legalDelivery(res);
+
+                        let displayOver = over;
+                        let displayBall = ball + 1;
+
+                        // Score
+                        if (res === "W" || hasWicket) tempWicket += 1;
+
+                        if (isExtra) {
+                          const parts = res.split("+");
+                          const runs = Number(parts[1]) || 0;
+
+                          if (isNoBall || isWide) {
+                            tempScore += runs + 1;
+                          } else {
+                            tempScore += runs;
+                          }
+
+                          const label = isNoBall
+                            ? "NB"
+                            : isWide
+                            ? "WD"
+                            : isBye
+                            ? "B"
+                            : isLegBye
+                            ? "LB"
+                            : "";
+
+                          const color = isNoBall
+                            ? "orange"
+                            : isWide
+                            ? "blue"
+                            : isBye
+                            ? "purple"
+                            : isLegBye
+                            ? "green"
+                            : "black";
+
+                          output.push(
+                            <div key={index} style={{ margin: "5px" }}>
+                              {displayOver}.{displayBall} :{" "}
+                              <span style={{ color, fontWeight: "bold" }}>
+                                {label}
+                              </span>{" "}
+                              -{" "}
+                              <span style={{ fontWeight: "bold" }}>{res}</span>
+                              &nbsp;
+                              <span style={{ color: "gray" }}>
+                                (Score: {tempScore} / Wickets: {tempWicket})
+                              </span>
+                            </div>
+                          );
+                        } else {
+                          // Normal delivery (number or W)
+                          if (res !== "W") {
+                            tempScore += Number(res);
+                          }
+
+                          output.push(
+                            <div key={index} style={{ margin: "5px" }}>
+                              {displayOver}.{displayBall} :{" "}
+                              <span
+                                style={
+                                  res === "W" || hasWicket
+                                    ? { color: "red", fontWeight: "bold" }
+                                    : {}
+                                }
+                              >
+                                {res}
+                              </span>{" "}
+                              &nbsp;
+                              <span style={{ color: "gray" }}>
+                                (Score: {tempScore} / Wickets: {tempWicket})
+                              </span>
+                            </div>
+                          );
+                        }
+
+                        // Only legal deliveries progress the ball count
+                        if (isLegal) {
+                          ball += 1;
+
+                          if (ball === 6) {
+                            output.push(
+                              <div
+                                key={`end-over-${over}`}
+                                className="end-over-line"
+                              >
+                                End of Over {over + 1}: {tempScore}/{tempWicket}
+                              </div>
+                            );
+                            over += 1;
+                            ball = 0;
+                          }
+                        }
+                      });
+
+                      return output;
+                    })()}
+                  </div>
+                </>
+              )}
+
+              {/* Reset Match Button - Positioned Safely */}
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: "20px",
+                  right: "20px",
+                  textAlign: "right",
+                }}
+              >
+                {!showResetConfirm ? (
+                  <button
+                    onClick={resetMatch}
+                    style={{
+                      backgroundColor: "lightcoral",
+                      color: "white",
+                      padding: "8px 12px",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Reset Match
+                  </button>
+                ) : (
+                  <div>
+                    <p style={{ color: "red", fontWeight: "bold" }}>
+                      Are you sure?
+                    </p>
+                    <button
+                      onClick={confirmReset}
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        padding: "8px 12px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setShowResetConfirm(false)}
+                      style={{
+                        backgroundColor: "gray",
+                        color: "white",
+                        padding: "8px 12px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      };
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>

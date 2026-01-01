@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        #outer-container {
+            background-color: aqua;
+            height: 400px;
+            width: 400px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .boxes {
+            background-color: rgb(26, 131, 139);
+            height: 180px;
+            width: 180px;
+            /* display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; */
+            margin: 10px 10px 10px 10px;
+        }
+
+        .boxes:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+            visibility: visible;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Welcome to Serving an HTML file.</h1>
+    <div id="outer-container">
+        <div class="boxes">
+            
+        </div>
+        <div class="boxes">
+
+        </div>
+        <div class="boxes">
+
+        </div>
+        <div class="boxes">
+
+        </div>
+    </div>
+    <p>Here we will show you how to connect a Html file to backend node.js </p>
+    <p style="color: blue;">This is a simple example of serving an HTML file using Node.js.</p>
+</body>
+</html>

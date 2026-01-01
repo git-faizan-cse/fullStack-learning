@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Brain Quest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="quiz-layout.css" />
+<html>
+<head>
+    <title>JS Brain Quest</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f1c40f;
+            --surface: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #e1e8ed;
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .quick-select-section,
+        .custom-input-section {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .quick-select-section h3,
+        .custom-input-section h3 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+        
+        .squared-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .squared-option {
+            aspect-ratio: 1;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .squared-option:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .squared-option.selected {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+        
+        .option-help,
+        .input-help {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .custom-input-container {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .input-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        #custom-question-count {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        #custom-question-count:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .custom-start-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-start-btn:hover {
+            background: var(--primary);
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .input-error {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+        }
+        
+        .question-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .info-box {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .info-label {
+            color: var(--text-secondary);
+        }
+        
+        .info-value {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* Question Header Styles */
+        .question-header {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.15);
+            backdrop-filter: blur(8px);
+            margin-bottom: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+        }
+
+        .question-header:hover {
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.2);
+            transform: translateX(-50%) translateY(-2px);
+        }
+ 
+        .question-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-number {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .question-number span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0 0.25rem;
+            position: relative;
+        }
+
+        .question-number span::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--background);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 0;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Question Container */
+        #question {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .question-indicators {
+            margin-bottom: 1rem;
+        }
+
+        .statistics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .performance-breakdown {
+            margin: 2rem 0;
+        }
+
+        .category-stats, 
+        .difficulty-stats {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .stat-bar {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .stat-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-bar-inner {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--success), var(--error));
+        }
+
+        .question-review {
+            margin-top: 2rem;
+        }
+
+        .question-item {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .question-item.correct {
+            border-left: 4px solid var(--success);
+        }
+
+        .question-item.incorrect {
+            border-left: 4px solid var(--error);
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-easy { color: var(--success); }
+        .difficulty-medium { color: var(--warning); }
+        .difficulty-hard { color: var(--error); }
+    </style>
+</head>
+<body>
+    <h1>JS Brain Quest</h1>
+
+    <!-- Question Selection Screen -->
+    <div id="question-selection" class="selection-screen">
+        <h2>How many questions would you like to answer?</h2>
+        <div class="marking-scheme">
+            <p><strong>Marking Scheme:</strong> +1 for correct answer, -0.25 for wrong answer</p>
+        </div>
+        
+        <div class="quiz-options">
+            <!-- Quick Selection Options -->
+            <div class="quick-select-section">
+                <h3>Quick Selection</h3>
+                <div class="squared-options" id="squared-options">
+                    <!-- Dynamic squared buttons for multiples of 5 will be generated here -->
+                </div>
+                <p class="option-help">Select a predefined number of questions</p>
+            </div>
+            
+            <!-- Custom Input Option -->
+            <div class="custom-input-section">
+                <h3>Custom Selection</h3>
+                <div class="custom-input-container">
+                    <div class="input-group">
+                        <input type="number" id="custom-question-count" min="1" placeholder="Enter number" />
+                        <span class="input-help">Available range: <span id="question-range">1-20</span></span>
+                    </div>
+                    <button id="custom-start-btn" class="custom-start-btn">Start Custom Quiz</button>
+                </div>
+                <div id="input-error" class="input-error"></div>
+            </div>
+        </div>
+        
+        <div class="question-info">
+            <div id="total-questions-info" class="info-box">
+                <span class="info-label">Total Available Questions:</span>
+                <span class="info-value" id="total-questions-count">0</span>
+            </div>
+            <div id="selected-questions-info" class="info-box">
+                <span class="info-label">Selected Questions:</span>
+                <span class="info-value" id="selected-questions-count">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="quiz-screen" style="display: none;">
+        <div class="quiz-container">
+            <!-- Question Side -->
+            <div class="question-side" id="question-side">
+                <div class="question-header">
+                    <div class="question-progress">
+                        <div class="question-number">
+                            Question <span id="current-question">1</span> of <span id="total-questions">5</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="question"></div>
+                <div id="options"></div>
+            </div>
+            
+            <!-- Explanation Side -->
+            <div class="explanation-side" id="explanation-side">
+                <div class="explanation-content">
+                    <h3 id="explanation-title">Explanation</h3>
+                    <p id="explanation-text">Select an answer to see the explanation here.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="score-container">
+            <div id="score"></div>
+            <button id="next">Next Question →</button>
+        </div>
+    </div>
+
+    <script type="module" src="quiz.js"></script>
+</body>
+</html>
